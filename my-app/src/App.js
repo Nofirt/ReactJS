@@ -6,8 +6,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-  <GetInfo />
-  <ul><OutputInfo /></ul>
+        <ToDoList></ToDoList>
       </div>
     );
   }
@@ -16,13 +15,67 @@ class App extends Component {
 class ToDoList extends Component {
   constructor(){
     super();
-    this.state={todos:[{name:'list',isCompleted:false}]}
+    this.state={todos:[{name:'',isCompleted:false}]}
   }
 
+  save = (value) => {
+    this.setState({
+      todos:[...this.state.todos, {name: value,isCompleted:false}]
+    });
+  }
+
+  complete = (index) => {
+    this.state.todos[index].isCompleted = !this.state.todos[index].isCompleted;
+    this.setState({
+      todos:this.state.todos
+    });
+  }
+  deleteItem = (index) => {
+    this.state.todos.splice(index, 1);
+    this.setState({
+      todos: this.state.todos
+    });
+  }
+  showAll = () => {
+
+    this.setState({
+      todos:this.state.todos
+    });
+  }
+
+
   render() {
-    return(
-      'hi'
+    const listItems = this.state.todos.map((todo, index) => {
+      return (
+        <li key={index}>
+          <input type='checkbox' data-index={index} checked={todo.isCompleted} onChange={this.complete.bind(this, index)} />{todo.name}
+          {todo.isCompleted ? ' completed' : ' not completed'}
+          <button onClick={this.deleteItem.bind(this, index)} >X</button>
+        </li>
     )
+    });
+//Filters
+const filterItems = this.state.todos.map((todo, index) => {
+  return (
+<div>
+      <button onClick={this.showAll} >All</button>
+      <button onClick={this.deleteItem.bind(this, index)} >Active</button>
+      <button onClick={this.deleteItem.bind(this, index)} >Completed</button>
+</div>
+
+)
+});
+//End of filters
+
+
+
+    return (
+      <div>
+        <GetInfo save={this.save} />
+        <ul>{listItems}</ul>
+        <footer>{filterItems}</footer>
+      </div>
+    );
   }
 }
 
@@ -49,12 +102,11 @@ class GetInfo extends Component {
   }
 }
 
-class OutputInfo extends Component {
+/*class OutputInfo extends Component {
   constructor(){}
   render(){
-    return(
-      <li>{}</li>
-    )
+  const listitems =
   }
 }
+*/
 export default App;
