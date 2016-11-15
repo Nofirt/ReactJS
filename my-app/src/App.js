@@ -6,7 +6,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ToDoList></ToDoList>
+        <ToDoList>
+
+        </ToDoList>
       </div>
     );
   }
@@ -15,65 +17,88 @@ class App extends Component {
 class ToDoList extends Component {
   constructor(){
     super();
-    this.state={todos:[{name:'',isCompleted:false}]}
+    this.state={todos:[{name:'', isCompleted:false}, {showComplete:false}]}
   }
 
   save = (value) => {
     this.setState({
-      todos:[...this.state.todos, {name: value,isCompleted:false}]
+      todos:[...this.state.todos, {name: value,isCompleted:false}, {showComplete:false}],
     });
   }
 
   complete = (index) => {
-    this.state.todos[index].isCompleted = !this.state.todos[index].isCompleted;
+    this.state.todos[index].isCompleted =!
+    this.state.todos[index].isCompleted;
+    console.log(index);
+    console.log(this.state.todos[index].isCompleted);
+
     this.setState({
       todos:this.state.todos
     });
   }
+
+  completed = (index) => {
+    this.setState({
+      todos:this.state.todos.isCompleted == false,
+      todos:this.state.todos.showComplete !== false
+    });
+  }
+
+  active = (index) => {
+    this.setState({
+      todos:this.state.todos.isCompleted == false,
+      todos:this.state.todos.showComplete == false
+    });
+  }
+  allTodos = (index) => {
+    this.setState({
+      todos:this.state.todos
+    });
+  }
+
   deleteItem = (index) => {
     this.state.todos.splice(index, 1);
     this.setState({
       todos: this.state.todos
     });
   }
-  showAll = () => {
-
-    this.setState({
-      todos:this.state.todos
-    });
-  }
 
 
   render() {
-    const listItems = this.state.todos.map((todo, index) => {
+    const listItems = this.state.todos.filter(function(todos){return todos.showComplete == false}).map((todo, index) => {
       return (
-        <li key={index}>
-          <input type='checkbox' data-index={index} checked={todo.isCompleted} onChange={this.complete.bind(this, index)} />{todo.name}
-          {todo.isCompleted ? ' completed' : ' not completed'}
-          <button onClick={this.deleteItem.bind(this, index)} >X</button>
+        <li key={index} >
+          <div id="roundedOne" id="left-side">
+            <input id="roundedOne"
+                   type='checkbox'
+                   data-index={index}
+                   checked={todo.isCompleted}
+                   onChange={this.complete.bind(this, index)} />
+            <label for="roundedOne"></label>
+          </div>
+          <div id="middle">
+            {todo.name}
+            {todo.isCompleted ? ' completed' : ' not completed'}
+          </div>
+          <div id="right-side">
+            <button id="but"
+                  onClick={this.deleteItem.bind(this, index)} >
+                  <span>X</span>
+            </button>
+          </div>
+          <div id="clear"></div>
+          <button onClick={this.completed.bind(this.isCompleted, index)}>Completed</button>
+          <button onClick={this.active.bind(this.isCompleted, index)}>Active</button>
+          <button onClick={this.allTodos.bind(this, index)}>All</button>
         </li>
     )
     });
-//Filters
-const filterItems = this.state.todos.map((todo, index) => {
-  return (
-<div>
-      <button onClick={this.showAll} >All</button>
-      <button onClick={this.deleteItem.bind(this, index)} >Active</button>
-      <button onClick={this.deleteItem.bind(this, index)} >Completed</button>
-</div>
-
-)
-});
-//End of filters
-
-
 
     return (
-      <div>
-        <GetInfo save={this.save} />
+      <div id="todo-body">
+        <h1>Todo List</h1>
+          <GetInfo save={this.save} />
         <ul>{listItems}</ul>
-        <footer>{filterItems}</footer>
       </div>
     );
   }
@@ -91,8 +116,8 @@ class GetInfo extends Component {
   }
   addToDoItem(event){
     if(event.key === 'Enter'){
-      console.log(this.state.value);
       this.props.save(this.state.value);
+      this.state.value = '';
     }
   }
   render(){
@@ -102,11 +127,4 @@ class GetInfo extends Component {
   }
 }
 
-/*class OutputInfo extends Component {
-  constructor(){}
-  render(){
-  const listitems =
-  }
-}
-*/
 export default App;
