@@ -17,7 +17,7 @@ class App extends Component {
 class ToDoList extends Component {
   constructor(){
     super();
-    this.state={todos:[{name:'', isCompleted:false}, {showComplete:false}]}
+    this.state={todos:[{name:'', isCompleted:false}], showCompleted:false}
   }
 
   save = (value) => {
@@ -29,9 +29,6 @@ class ToDoList extends Component {
   complete = (index) => {
     this.state.todos[index].isCompleted =!
     this.state.todos[index].isCompleted;
-    console.log(index);
-    console.log(this.state.todos[index].isCompleted);
-
     this.setState({
       todos:this.state.todos
     });
@@ -39,17 +36,12 @@ class ToDoList extends Component {
 
   completed = (index) => {
     this.setState({
-      todos:this.state.todos.isCompleted == false,
-      todos:this.state.todos.showComplete !== false
+      todos:this.state.todos,
+      showCompleted:!this.state.showCompleted
     });
   }
 
-  active = (index) => {
-    this.setState({
-      todos:this.state.todos.isCompleted == false,
-      todos:this.state.todos.showComplete == false
-    });
-  }
+
   allTodos = (index) => {
     this.setState({
       todos:this.state.todos
@@ -65,7 +57,8 @@ class ToDoList extends Component {
 
 
   render() {
-    const listItems = this.state.todos.filter(function(todos){return todos.showComplete == false}).map((todo, index) => {
+    const listItems = this.state.todos.filter(function(todo){return todo.showComplete ? true : !todo.isCompleted;})
+    .map((todo, index) => {
       return (
         <li key={index} >
           <div id="roundedOne" id="left-side">
@@ -88,7 +81,6 @@ class ToDoList extends Component {
           </div>
           <div id="clear"></div>
           <button onClick={this.completed.bind(this.isCompleted, index)}>Completed</button>
-          <button onClick={this.active.bind(this.isCompleted, index)}>Active</button>
           <button onClick={this.allTodos.bind(this, index)}>All</button>
         </li>
     )
